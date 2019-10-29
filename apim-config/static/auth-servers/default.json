@@ -1,0 +1,61 @@
+{
+  "id": "default-auth",
+  "desc": "Default Authorization Server",
+  "authMethods": [
+    {
+      "enabled": true,
+      "name": "local",
+      "type": "local",
+      "friendlyShort": "Username and Password",
+      "friendlyLong": "Log in using a local username and password.",
+      "config": {
+        "trustUsers": false
+      }
+    },
+    {
+      "enabled": true,
+      "type": "oauth2",
+      "name": "cheapass",
+      "friendlyShort": "Cheap-Ass Identity Provider",
+      "friendlyLong": "Cheap-Ass Identity Provider",
+      "config": {
+        "clientId": "your-client-id",
+        "clientSecret": "your-client-secret",
+        "endpoints": {
+          "authorizeEndpoint": "http://localhost:4444/authorize",
+          "authorizeScope": "profile email",
+          "tokenEndpoint": "http://${DOCKER_HOST}:4444/token",
+          "profileEndpoint": "http://localhost:4444/profile"
+        },
+        "params": {},
+        "customIdField": "sub",
+        "firstNameField": "given_name",
+        "lastNameField": "family_name",
+        "emailField": "email",
+        "doesNotSupportPrompt": true,
+        "trustUsers": true
+      }
+    }
+  ],
+  "config": {
+    "api": {
+      "name": "default-auth",
+      "upstream_url": "$PORTAL_AUTHSERVER_URL",
+      "preserve_host": false,
+      "uris": [
+        "/auth"
+      ],
+      "strip_uri": false
+    },
+    "plugins": [
+      {
+        "name": "correlation-id",
+        "config": {
+          "header_name": "Correlation-Id",
+          "generator": "uuid",
+          "echo_downstream": false
+        }
+      }
+    ]
+  }
+}
